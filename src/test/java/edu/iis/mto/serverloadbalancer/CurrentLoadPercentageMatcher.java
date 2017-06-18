@@ -16,11 +16,19 @@ public class CurrentLoadPercentageMatcher extends TypeSafeMatcher<Server> {
 	}
 
 	protected boolean matchesSafely(Server server) {
-		return server.currentLoadPercentage == expectedLoadPercntage ||
-				Math.abs(server.currentLoadPercentage - expectedLoadPercntage) < 0.01d;
+		return doublesAreEqual(server.currentLoadPercentage, this.expectedLoadPercntage);
+	}
+
+	private boolean doublesAreEqual(double d1, double d2) {
+		return d1 == d2 ||
+				Math.abs(d1 - d2) < 0.01d;
 	}
 
 	public void describeTo(Description description) {
 		description.appendText("server with load percentage of ").appendValue(expectedLoadPercntage);
+	}
+
+	public static CurrentLoadPercentageMatcher hasLoadPercentageOf(double expectedLoadPercntage) {
+		return new CurrentLoadPercentageMatcher(expectedLoadPercntage);
 	}
 }
