@@ -7,13 +7,22 @@ package edu.iis.mto.serverloadbalancer;
 public class ServerLoadBalancer {
 	public void balance(Server[] servers, Vm[] vms) {
 		for (Vm vm : vms) {
-			Server leastUsedServer = null;
-			for (Server server : servers) {
-				if (leastUsedServer == null || leastUsedServer.currentLoadPercentage > server.currentLoadPercentage) {
-					leastUsedServer = server;
-				}
-			}
-			leastUsedServer.addVm(vm);
+			addVmToLeastUsedServer(servers, vm);
 		}
+	}
+
+	private void addVmToLeastUsedServer(Server[] servers, Vm vm) {
+		Server leastUsedServer = getLeastUsedServer(servers);
+		leastUsedServer.addVm(vm);
+	}
+
+	private Server getLeastUsedServer(Server[] servers) {
+		Server leastUsedServer = null;
+		for (Server server : servers) {
+			if (leastUsedServer == null || leastUsedServer.currentLoadPercentage > server.currentLoadPercentage) {
+				leastUsedServer = server;
+			}
+		}
+		return leastUsedServer;
 	}
 }
