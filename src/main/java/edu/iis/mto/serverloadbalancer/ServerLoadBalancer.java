@@ -8,6 +8,7 @@ import java.util.List;
  */
 
 public class ServerLoadBalancer {
+
 	public void balance(Server[] servers, Vm[] vms) {
 		for (Vm vm : vms) {
 			addVmToLeastUsedCapableServer(servers, vm);
@@ -35,7 +36,7 @@ public class ServerLoadBalancer {
 	private Server getLeastUsedServer(List<Server> servers) {
 		Server leastUsedServer = null;
 		for (Server server : servers) {
-			if (leastUsedServer == null || leastUsedServer.currentLoadPercentage > server.currentLoadPercentage) {
+			if (leastUsedServer == null || leastUsedServer.getCurrentLoadPercentage() > server.getCurrentLoadPercentage()) {
 				leastUsedServer = server;
 			}
 		}

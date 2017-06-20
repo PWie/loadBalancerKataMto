@@ -10,10 +10,10 @@ import java.util.List;
 public class Server {
 
 	public static final double MAX_LOAD = 100.0d;
-	public double currentLoadPercentage;
-	public int capacity;
+	private double currentLoadPercentage;
+	private int capacity;
 
-	List<Vm> vms = new ArrayList<Vm>();
+	private List<Vm> vms = new ArrayList<Vm>();
 
 	public Server(int capacity) {
 		this.capacity = capacity;
@@ -25,7 +25,7 @@ public class Server {
 	}
 
 	private double vmLoad(Vm vm) {
-		return ((double) vm.size / capacity) * MAX_LOAD;
+		return ((double) vm.getSize() / capacity) * MAX_LOAD;
 	}
 
 	public boolean contains(Vm vm) {
@@ -38,5 +38,13 @@ public class Server {
 
 	public boolean canFit(Vm vm) {
 		return currentLoadPercentage + vmLoad(vm) <= MAX_LOAD;
+	}
+
+	public double getCurrentLoadPercentage() {
+		return currentLoadPercentage;
+	}
+
+	public int getCapacity() {
+		return capacity;
 	}
 }
