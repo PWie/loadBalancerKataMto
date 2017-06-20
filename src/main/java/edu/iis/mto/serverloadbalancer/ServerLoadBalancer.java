@@ -10,21 +10,26 @@ import java.util.List;
 public class ServerLoadBalancer {
 	public void balance(Server[] servers, Vm[] vms) {
 		for (Vm vm : vms) {
-			addVmToLeastUsedServer(servers, vm);
+			addVmToLeastUsedCapableServer(servers, vm);
 		}
 	}
 
-	private void addVmToLeastUsedServer(Server[] servers, Vm vm) {
+	private void addVmToLeastUsedCapableServer(Server[] servers, Vm vm) {
+		List<Server> capableServers = getCapableServers(servers, vm);
+		Server leastUsedServer = getLeastUsedServer(capableServers);
+		if (leastUsedServer != null) {
+			leastUsedServer.addVm(vm);
+		}
+	}
+
+	private List<Server> getCapableServers(Server[] servers, Vm vm) {
 		List<Server> capableServers = new ArrayList<Server>();
 		for (Server server : servers) {
 			if (server.canFit(vm)) {
 				capableServers.add(server);
 			}
 		}
-		Server leastUsedServer = getLeastUsedServer(capableServers);
-		if (leastUsedServer != null) {
-			leastUsedServer.addVm(vm);
-		}
+		return capableServers;
 	}
 
 	private Server getLeastUsedServer(List<Server> servers) {
