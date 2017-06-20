@@ -60,14 +60,24 @@ public class ServerLoadBalancerTest {
 
 	@Test
 	public void balancingOneVms_lessUsedServerShouldBeFilled() throws Exception {
-		Server lessUsedServer = a(server().withCapacity(10).withCurrentLoadOf(45.0d));
-		Server moreUsedServer = a(server().withCapacity(10).withCurrentLoadOf(50.0d));
+		Server lessUsedServer = a(server().withCapacity(100).withCurrentLoadOf(45.0d));
+		Server moreUsedServer = a(server().withCapacity(100).withCurrentLoadOf(50.0d));
 		Vm theVm = a(vm().ofSize(2));
 
 		balance(aListOfServersWith(moreUsedServer, lessUsedServer), aListOfVmsWith(theVm));
 
 		assertThat("the more used server should not contain vm", !moreUsedServer.contains(theVm));
 		assertThat("the less used server should contain vm", lessUsedServer.contains(theVm));
+	}
+
+	@Test
+	public void balancingOneVm_andServerWithNotEnoughRoom_ShouldNotBeFilledWithVm() throws Exception {
+		Server theServer = a(server().withCapacity(1));
+		Vm theVm = a(vm().ofSize(2));
+
+		balance(aListOfServersWith(theServer), aListOfVmsWith(theVm));
+
+		assertThat("the server should not contain vm", !theServer.contains(theVm));
 	}
 
 	private void balance(Server[] servers, Vm[] vms) {
